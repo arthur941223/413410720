@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 小人自我介紹</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background: var(--bg-color);
+        color: var(--text-color);
+        text-align: center;
+        padding: 40px;
+        transition: background 0.3s, color 0.3s;
+      }
+      :root {
+        --bg-color: #f0f4f8;
+        --text-color: #333;
+      }
+      .dark-mode {
+        --bg-color: #1e1e1e;
+        --text-color: #f9f9f9;
+      }
+      #robot-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #avatar {
+        width: 180px;
+        height: auto;
+        animation: float 3s ease-in-out infinite;
+      }
+      #dialog-box {
+        margin-top: 20px;
+        padding: 15px 20px;
+        background-color: #ffffff;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        max-width: 400px;
+        min-height: 60px;
+        font-size: 18px;
+        color: #333;
+        transition: all 0.3s ease-in-out;
+        white-space: pre-wrap;
+      }
+      button {
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #4caf50;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .button-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 450px;
+        margin: 20px auto 10px;
+      }
+      .topic-button {
+        width: 100px;
+        margin: 5px;
+        padding: 10px;
+        font-size: 14px;
+        background-color: #2196f3;
+      }
+      .topic-button:hover {
+        background-color: #1976d2;
+      }
+      a {
+        text-decoration: none;
+      }
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧠 我的 AI 小助手</h1>
+    <button onclick="toggleTheme()">🌗 切換主題</button>
+    <div id="robot-area">
+      <img src="your-avatar.png" alt="我的小人" id="avatar" />
+      <div id="dialog-box">點擊下方按鈕開始對話</div>
+    </div>
+
+    <!-- 八個主題按鈕 -->
+    <div class="button-grid">
+      <button class="topic-button" onclick="showText('interest')">興趣</button>
+      <button class="topic-button" onclick="showText('skill')">專長</button>
+      <button class="topic-button" onclick="showText('experience')">
+        經歷
+      </button>
+      <button class="topic-button" onclick="showText('education')">學歷</button>
+      <button class="topic-button" onclick="showText('projects')">作品</button>
+      <button class="topic-button" onclick="showText('goal')">目標</button>
+      <button class="topic-button" onclick="showText('character')">性格</button>
+      <button class="topic-button" onclick="showText('tech')">技能</button>
+    </div>
+
+    <button onclick="nextDialog()">▶ 下一句</button>
+
+    <a
+      href="https://docs.google.com/forms/d/e/1FAIpQLSc6icKX2IhoxAm_H33HytRpLain89wg86_MTJx2csDfYuG4EQ/viewform"
+      target="_blank"
+    >
+      <button>📝 留言給我</button>
+    </a>
+
+    <script>
+      const dialogBox = document.getElementById('dialog-box');
+      let typingTimer;
+      let index = 0;
+
+      const dialogs = [
+        '嗨，我是アッカーマン！',
+        '我來幫你認識他：他是一個比較慢熟的人，剛開始可能比較安靜，但熟了之後會發現他很有自己的想法，也很貼心。',
+        '這是他製作的互動式簡歷網頁！',
+      ];
+
+      const topics = {
+        interest:
+          '平時我喜歡玩Valorant，享受與隊友之間的合作與戰術溝通。此外，我也喜歡看恐怖電影，偶爾會去參加音樂祭，享受聽團的樂趣。(例如:草東沒有派對、怕胖團)',
+        skill:
+          '我的專長是 C 與 Python 的應用程式設計，擅長圖形介面與互動設計。',
+        experience:
+          '曾參與校內程式競賽，也在系學會擔任總務長，熟悉規劃與紀錄。',
+        education: '目前就讀於淡江大學資訊工程學系，曾就讀海山高中及南門國中',
+        projects: '近期作品包含節奏音樂遊戲與日式將棋系統，皆具備互動 GUI。',
+        goal: '短期目標是成為熟練的前後端工程師，未來希望投入智慧應用或遊戲產業。',
+        character: '我是個細心且願意傾聽的人，喜歡解決問題並重視團隊溝通。',
+        tech: '學習過C、HTML、C++，也會溜冰、游泳、打羽球等球類運動',
+      };
+
+      function typeText(text) {
+        let i = 0;
+        dialogBox.innerText = '';
+        clearInterval(typingTimer);
+        typingTimer = setInterval(() => {
+          dialogBox.innerText += text.charAt(i);
+          i++;
+          if (i >= text.length) clearInterval(typingTimer);
+        }, 40);
+      }
+
+      function nextDialog() {
+        if (index < dialogs.length) {
+          typeText(dialogs[index]);
+          index++;
+        } else {
+          typeText('點擊下面的按鈕來認識他吧.w.');
+        }
+      }
+
+      function showText(topicKey) {
+        const text = topics[topicKey];
+        typeText(text);
+      }
+
+      function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+      }
+    </script>
+  </body>
+</html>
